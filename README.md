@@ -14,7 +14,7 @@ Initially we aim to achieve the following goals:
 
 Down the road we would like to implement:
 
-* Larger subset of Python and Xonsh that can be statially compiled (such as
+* Larger subset of Python and Xonsh that can be statically compiled (such as
   `xonsh.lib.os.rmtree`)
 * Ability to have multiple backends that any minixonsh script could be compiled
   to, such as: binary (using LLVM), Bash, Windows Batch, C, C++, Python, etc.
