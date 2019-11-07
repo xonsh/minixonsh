@@ -19,7 +19,7 @@ int run_command(const std::vector<std::string> &args)
     if (pid == 0)
     {
         // Child process
-        execv(cargs[0], &cargs[0]);
+        execvp(cargs[0], &cargs[0]);
         // Execv failed
         throw std::runtime_error("execv() failed");
     }
@@ -82,8 +82,6 @@ int main(int argc, char **argv)
 
     for (auto && line : lines) {
         std::vector<std::string> args = split(line);
-        // TODO: search args[0] in $PATH instead:
-        args[0] = "/bin/" + args[0];
         print_command(args);
         int c = run_command(args);
         if (c != 0) return c;
