@@ -5,6 +5,7 @@
 #include <stdio.h>
 
 #ifdef _WIN32
+#    include <process.h>
 #else
 #    include <sys/wait.h>
 #    include <unistd.h>
@@ -25,23 +26,17 @@ int run_command(const std::vector<std::string> &args)
     cargs[args.size()] = nullptr;
 
 #ifdef _WIN32
-    // FIXME: Implement fork() on Windows
-    int pid = -1;
+    _spawnvp(_P_WAIT, cargs[0], &cargs[0]);
+    return 0;
 #else
     pid_t pid = fork();
-#endif
     if (pid == 0)
     {
-#ifdef _WIN32
-        // FIXME: Implement execvp() on Windows
-        throw std::runtime_error("execvp() not implemented on Windows");
-#else
         // Child process
         execvp(cargs[0], &cargs[0]);
         // Execv failed
         std::cout << "Command '" << args[0] << "' not found" << std::endl;
         exit(err_exec);
-#endif
     }
     else if (pid < 0)
     {
@@ -51,19 +46,9 @@ int run_command(const std::vector<std::string> &args)
 
     // Parent process
     int child_status;
-#ifdef _WIN32
-    int tpid;
-#else
     pid_t tpid;
-#endif
     do {
-#ifdef _WIN32
-        // FIXME: Implement wait() on Windows
-        tpid = pid + 1;
-        child_status = 0;
-#else
         tpid = wait(&child_status);
-#endif
         if (tpid != pid) {
             std::cout << "Process terminated:" << tpid << std::endl;
         }
@@ -72,6 +57,7 @@ int run_command(const std::vector<std::string> &args)
     // For some reason the child error code gets shifted by 8...
     if (child_status == (err_exec << 8)) child_status = -1;
     return child_status;
+#endif
 }
 
 void print_command(const std::vector<std::string> &args)
