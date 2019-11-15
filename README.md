@@ -3,6 +3,8 @@
 Minixonsh is a subset of Xonsh, that can be fully parsed and compiled ahead of
 time, implemented in C++, with no Python dependency.
 
+Minixonsh is in development (pre-alpha) stage.
+
 Initially we aim to achieve the following goals:
 
 * Very fast to start, compile and execute
@@ -18,3 +20,15 @@ Down the road we would like to implement:
   `xonsh.lib.os.rmtree`)
 * Ability to have multiple backends that any minixonsh script could be compiled
   to, such as: binary (using LLVM), Bash, Windows Batch, C, C++, Python, etc.
+
+# Build and Test
+
+Build:
+```
+cmake .
+make
+```
+Test:
+```
+./minixonsh test1.xsh
+```
