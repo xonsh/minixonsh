@@ -30,7 +30,7 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: cmake
-      run: cmake -G "Visual Studio 16 2019 Win64" .
+      run: cmake -G "Visual Studio 16 2019" .
     - name: make
       run: cmake --build .
     - name: test
