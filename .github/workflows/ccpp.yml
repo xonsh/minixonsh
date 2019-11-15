@@ -6,14 +6,12 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    
+
     steps:
     - uses: actions/checkout@v1
     - name: cmake
       run: cmake .
     - name: make
       run: make
-    - name: test1
-      run: time bash test1.xsh
-    - name: test2
-      run: time ./minixonsh test1.xsh
+    - name: test
+      run: ctest --output-on-failure
