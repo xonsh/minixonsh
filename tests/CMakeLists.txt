@@ -1,9 +1,16 @@
 set(MINIXONSH ${CURRENT_BINARY_DIR}/../minixonsh)
 
 add_test(test1 ${MINIXONSH} test1.xsh)
+add_test(test1-bash bash test1.xsh)
 
 add_test(test2 ${MINIXONSH} test2.xsh)
 set_tests_properties(test2 PROPERTIES WILL_FAIL TRUE)
 
+add_test(test2-bash bash test2.xsh)
+set_tests_properties(test2-bash PROPERTIES WILL_FAIL TRUE)
+
 add_test(test3 ${MINIXONSH} test3.xsh)
 set_tests_properties(test3 PROPERTIES WILL_FAIL TRUE)
+
+add_test(test3-bash bash -e test3.xsh)
+set_tests_properties(test3-bash PROPERTIES WILL_FAIL TRUE)
