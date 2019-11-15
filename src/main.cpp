@@ -14,7 +14,11 @@
 int run_command(const std::vector<std::string> &args)
 {
     const int err_exec = 123;
-    char *cargs[args.size()+1];
+    const size_t cargs_max = 256;
+    if (args.size()+1 > cargs_max) {
+        throw std::runtime_error("Too many arguments.");
+    }
+    char *cargs[cargs_max];
     for (size_t i=0; i < args.size(); i++) {
         cargs[i] = const_cast<char*>(args[i].c_str());
     }
@@ -22,7 +26,7 @@ int run_command(const std::vector<std::string> &args)
 
 #ifdef _WIN32
     // FIXME: Implement fork() on Windows
-    pid_t pid = -1;
+    int pid = -1;
 #else
     pid_t pid = fork();
 #endif
@@ -47,7 +51,11 @@ int run_command(const std::vector<std::string> &args)
 
     // Parent process
     int child_status;
+#ifdef _WIN32
+    int tpid;
+#else
     pid_t tpid;
+#endif
     do {
 #ifdef _WIN32
         // FIXME: Implement wait() on Windows
