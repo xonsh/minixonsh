@@ -74,7 +74,7 @@ int run_command(const std::vector<std::string> &args)
     return child_status;
 }
 
-int print_command(const std::vector<std::string> &args)
+void print_command(const std::vector<std::string> &args)
 {
     std::cout << "+ ";
     for (size_t i=0; i < args.size(); i++) {
