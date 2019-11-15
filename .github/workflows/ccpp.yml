@@ -34,5 +34,4 @@ jobs:
     - name: make
       run: cmake --build .
     - name: test
-      # Run all non-bash tests on Windows
-      run: ctest -E bash --output-on-failure
+      run: ctest --output-on-failure
