@@ -12,7 +12,7 @@ jobs:
     - name: make
       run: make
     - name: test
-      run: ctest --output-on-failure
+      run: ctest -V
 
   macOS:
     runs-on: macos-latest
@@ -23,7 +23,7 @@ jobs:
     - name: make
       run: make
     - name: test
-      run: ctest --output-on-failure
+      run: ctest -V
 
   Windows:
     runs-on: windows-latest
@@ -35,4 +35,4 @@ jobs:
       run: cmake --build .
     - name: test
       # Run all non-bash tests on Windows
-      run: ctest -E bash --output-on-failure
+      run: ctest -E bash -V
