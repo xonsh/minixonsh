@@ -33,6 +33,6 @@ jobs:
       run: cmake -G "Visual Studio 16 2019" .
     - name: make
       run: cmake --build .
-    # TODO: Minixonsh compiles but does not yet run on Windows
-    #- name: test
-    #  run: ctest --output-on-failure
+    - name: test
+      # Run all non-bash tests on Windows
+      run: ctest -E bash --output-on-failure
