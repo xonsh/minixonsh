@@ -55,7 +55,11 @@ std::vector<std::string> readlines(const std::string filename)
 {
     std::vector<std::string> lines;
     std::fstream in;
-    in.open("test1.xsh");
+    in.open(filename);
+    if (in.rdstate() != std::ios_base::goodbit) {
+        std::cout << "File could not be opened." << std::endl;
+        exit(1);
+    }
     std::string line;
     std::getline(in, line);
     while (in.rdstate() == std::ios_base::goodbit) {
