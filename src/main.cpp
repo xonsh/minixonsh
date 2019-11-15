@@ -24,9 +24,10 @@ int run_command(const std::vector<std::string> &args)
     }
     cargs[args.size()] = nullptr;
 
+    int child_status;
+
 #ifdef _WIN32
-    _spawnvp(_P_WAIT, cargs[0], &cargs[0]);
-    return 0;
+    child_status = _spawnvp(_P_WAIT, cargs[0], &cargs[0]);
 #else
     const int err_exec = 123;
     pid_t pid = fork();
@@ -45,7 +46,6 @@ int run_command(const std::vector<std::string> &args)
     }
 
     // Parent process
-    int child_status;
     pid_t tpid;
     do {
         tpid = wait(&child_status);
@@ -56,8 +56,9 @@ int run_command(const std::vector<std::string> &args)
 
     // For some reason the child error code gets shifted by 8...
     if (child_status == (err_exec << 8)) child_status = -1;
-    return child_status;
 #endif
+
+    return child_status;
 }
 
 void print_command(const std::vector<std::string> &args)
