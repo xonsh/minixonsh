@@ -14,7 +14,6 @@
 
 int run_command(const std::vector<std::string> &args)
 {
-    const int err_exec = 123;
     const size_t cargs_max = 256;
     if (args.size()+1 > cargs_max) {
         throw std::runtime_error("Too many arguments.");
@@ -29,6 +28,7 @@ int run_command(const std::vector<std::string> &args)
     _spawnvp(_P_WAIT, cargs[0], &cargs[0]);
     return 0;
 #else
+    const int err_exec = 123;
     pid_t pid = fork();
     if (pid == 0)
     {
