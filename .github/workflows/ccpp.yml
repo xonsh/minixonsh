@@ -3,10 +3,8 @@ name: CI
 on: [push, pull_request]
 
 jobs:
-  build:
-
+  Linux:
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v1
     - name: cmake
@@ -15,3 +13,26 @@ jobs:
       run: make
     - name: test
       run: ctest --output-on-failure
+
+  macOS:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: cmake
+      run: cmake .
+    - name: make
+      run: make
+    - name: test
+      run: ctest --output-on-failure
+
+  Windows:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: cmake
+      run: cmake -G "Visual Studio 16 2019" .
+    - name: make
+      run: cmake --build .
+    # TODO: Minixonsh compiles but does not yet run on Windows
+    #- name: test
+    #  run: ctest --output-on-failure

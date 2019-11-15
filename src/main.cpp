@@ -2,28 +2,46 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
-#include <sys/wait.h>
-
 #include <stdio.h>
-#include <unistd.h>
+
+#ifdef _WIN32
+#else
+#    include <sys/wait.h>
+#    include <unistd.h>
+#endif
+
 
 int run_command(const std::vector<std::string> &args)
 {
     const int err_exec = 123;
-    char *cargs[args.size()+1];
+    const size_t cargs_max = 256;
+    if (args.size()+1 > cargs_max) {
+        throw std::runtime_error("Too many arguments.");
+    }
+    char *cargs[cargs_max];
     for (size_t i=0; i < args.size(); i++) {
         cargs[i] = const_cast<char*>(args[i].c_str());
     }
     cargs[args.size()] = nullptr;
 
+#ifdef _WIN32
+    // FIXME: Implement fork() on Windows
+    int pid = -1;
+#else
     pid_t pid = fork();
+#endif
     if (pid == 0)
     {
+#ifdef _WIN32
+        // FIXME: Implement execvp() on Windows
+        throw std::runtime_error("execvp() not implemented on Windows");
+#else
         // Child process
         execvp(cargs[0], &cargs[0]);
         // Execv failed
         std::cout << "Command '" << args[0] << "' not found" << std::endl;
         exit(err_exec);
+#endif
     }
     else if (pid < 0)
     {
@@ -33,9 +51,19 @@ int run_command(const std::vector<std::string> &args)
 
     // Parent process
     int child_status;
+#ifdef _WIN32
+    int tpid;
+#else
     pid_t tpid;
+#endif
     do {
+#ifdef _WIN32
+        // FIXME: Implement wait() on Windows
+        tpid = pid + 1;
+        child_status = 0;
+#else
         tpid = wait(&child_status);
+#endif
         if (tpid != pid) {
             std::cout << "Process terminated:" << tpid << std::endl;
         }
@@ -46,7 +74,7 @@ int run_command(const std::vector<std::string> &args)
     return child_status;
 }
 
-int print_command(const std::vector<std::string> &args)
+void print_command(const std::vector<std::string> &args)
 {
     std::cout << "+ ";
     for (size_t i=0; i < args.size(); i++) {
