@@ -1,0 +1,15 @@
+set(MINIXONSH ${CURRENT_BINARY_DIR}/../minixonsh)
+
+macro(RUN name)
+	add_test(${name} ${MINIXONSH} ${name}.xsh)
+	add_test(${name}-bash bash -e ${name}.xsh)
+    set(extra_args ${ARGN})
+    if (extra_args STREQUAL "fail")
+        set_tests_properties(${name} PROPERTIES WILL_FAIL TRUE)
+        set_tests_properties(${name}-bash PROPERTIES WILL_FAIL TRUE)
+    endif()
+endmacro(RUN)
+
+RUN(test1)
+RUN(test2 fail)
+RUN(test3 fail)

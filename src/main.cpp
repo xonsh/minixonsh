@@ -9,6 +9,7 @@
 
 int run_command(const std::vector<std::string> &args)
 {
+    const int err_exec = 123;
     char *cargs[args.size()+1];
     for (size_t i=0; i < args.size(); i++) {
         cargs[i] = const_cast<char*>(args[i].c_str());
@@ -21,7 +22,8 @@ int run_command(const std::vector<std::string> &args)
         // Child process
         execvp(cargs[0], &cargs[0]);
         // Execv failed
-        throw std::runtime_error("execv() failed");
+        std::cout << "Command '" << args[0] << "' not found" << std::endl;
+        exit(err_exec);
     }
     else if (pid < 0)
     {
@@ -38,6 +40,9 @@ int run_command(const std::vector<std::string> &args)
             std::cout << "Process terminated:" << tpid << std::endl;
         }
     } while (tpid != pid);
+
+    // For some reason the child error code gets shifted by 8...
+    if (child_status == (err_exec << 8)) child_status = -1;
     return child_status;
 }
 
@@ -55,7 +60,11 @@ std::vector<std::string> readlines(const std::string filename)
 {
     std::vector<std::string> lines;
     std::fstream in;
-    in.open("test1.xsh");
+    in.open(filename);
+    if (in.rdstate() != std::ios_base::goodbit) {
+        std::cout << "File could not be opened." << std::endl;
+        exit(1);
+    }
     std::string line;
     std::getline(in, line);
     while (in.rdstate() == std::ios_base::goodbit) {

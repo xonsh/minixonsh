@@ -23,12 +23,13 @@ Down the road we would like to implement:
 
 # Build and Test
 
-Build:
+Build and test:
 ```
 cmake .
 make
+ctest
 ```
-Test:
+Run a single test manually:
 ```
-./minixonsh test1.xsh
+./minixonsh tests/test1.xsh
 ```
