@@ -28,6 +28,7 @@ int run_command(const std::vector<std::string> &args)
 
 #ifdef _WIN32
     child_status = _spawnvp(_P_WAIT, cargs[0], &cargs[0]);
+    return 0;
 #else
     const int err_exec = 123;
     pid_t pid = fork();
